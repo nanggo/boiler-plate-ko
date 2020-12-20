@@ -2,9 +2,9 @@ const express = require("express");
 const app = express();
 const port = 5000;
 const mongoose = require("mongoose");
-const {User} = require("./models/User");
+const { User } = require("./models/User");
 const bodyParser = require("body-parser");
-
+const config = require("./config/key");
 // application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -12,15 +12,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 mongoose
-  .connect(
-    `mongodb+srv://nanggo:1234qwer!@cluster0.ynsia.mongodb.net/test?retryWrites=true&w=majority`,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-      useFindAndModify: false,
-    }
-  )
+  .connect(config.mongoUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
   .then(() => console.log("MongoDB connected..."))
   .catch((err) => console.log(err));
 
