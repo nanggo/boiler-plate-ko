@@ -36,7 +36,11 @@ app.post('/register', (request, response) => {
 
 app.post('/login', function (req, response) {
   User.findOne({email: req.body.email}, (err, user) => {
-    if (err) return response.json({loginSuccess: false, message: err.message});
+    if (err)
+      return response.json({
+        loginSuccess: false,
+        message: err.message,
+      });
     if (!user) {
       response.json({
         loginSuccess: false,
@@ -44,16 +48,28 @@ app.post('/login', function (req, response) {
       });
     }
     user.comparePassword(req.body.password, (err, isMatch) => {
-      if (err) return response.status(400).json({loginSuccess: false, message: err.message});
-      if (!isMatch) return response.json({loginSuccess: false, message: '비밀번호가 일치하지 않습니다.'});
+      if (err)
+        return response
+          .status(400)
+          .json({loginSuccess: false, message: err.message});
+      if (!isMatch)
+        return response.json({
+          loginSuccess: false,
+          message: '비밀번호가 일치하지 않습니다.',
+        });
 
       // 비번 매칭됐을 때
       user.generateToken((err, result) => {
         if (err) return response.status(400).send(err);
-        response.cookie('x_auth', result.token).status(200).json({loginSuccess: true, userId: result._id});
+        response
+          .cookie('x_auth', result.token)
+          .status(200)
+          .json({loginSuccess: true, userId: result._id});
       });
     });
   });
 });
 
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`));
+app.listen(port, () =>
+  console.log(`Example app listening at http://localhost:${port}`),
+);
