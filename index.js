@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const {User} = require('./models/User');
 const bodyParser = require('body-parser');
 const config = require('./config/key');
-const cookieParser = require('cookie-parser');
+const cookie = require('cookie-parser');
 
 // application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: true}));
@@ -50,7 +50,7 @@ app.post('/login', function (req, response) {
       // 비번 매칭됐을 때
       user.generateToken((err, result) => {
         if (err) return response.status(400).send(err);
-        response.status(200).json({loginSuccess: true, message: result._id});
+        response.cookie('x_auth', result.token).status(200).json({loginSuccess: true, userId: result._id});
       });
     });
   });
