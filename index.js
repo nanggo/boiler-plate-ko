@@ -85,6 +85,13 @@ app.get('/api/users/auth', auth, (request, response) => {
   });
 });
 
+app.get('/api/users/logout', auth, (request, response) => {
+  User.findOneAndUpdate({_id: request.user._id}, {token: ''}, (err, res) => {
+    if (err) return response.json({success: false, error});
+    response.status(200).json({success: true});
+  });
+});
+
 app.listen(port, () =>
   console.log(`Example app listening at http://localhost:${port}`),
 );
