@@ -5,13 +5,16 @@ const mongoose = require('mongoose');
 const {User} = require('./models/User');
 const bodyParser = require('body-parser');
 const config = require('./config/key');
-const cookie = require('cookie-parser');
+const {auth} = require('./middleware/auth');
+const cookieParser = require('cookie-parser');
 
 // application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: true}));
 
 // application/json
 app.use(bodyParser.json());
+
+app.use(cookieParser());
 
 mongoose
   .connect(config.mongoUri, {
@@ -25,7 +28,7 @@ mongoose
 
 app.get('/', (req, res) => res.send('Hello World!'));
 
-app.post('/register', (request, response) => {
+app.post('/api/users/register', (request, response) => {
   const user = new User(request.body);
 
   user.save((err, userInfo) => {
@@ -34,8 +37,8 @@ app.post('/register', (request, response) => {
   });
 });
 
-app.post('/login', function (req, response) {
-  User.findOne({email: req.body.email}, (err, user) => {
+app.post('/api/users/login', (request, response) => {
+  User.findOne({email: request.body.email}, (err, user) => {
     if (err)
       return response.json({
         loginSuccess: false,
@@ -47,7 +50,7 @@ app.post('/login', function (req, response) {
         message: '해당하는 이메일이 존재하지 않습니다.',
       });
     }
-    user.comparePassword(req.body.password, (err, isMatch) => {
+    user.comparePassword(request.body.password, (err, isMatch) => {
       if (err)
         return response
           .status(400)
@@ -67,6 +70,18 @@ app.post('/login', function (req, response) {
           .json({loginSuccess: true, userId: result._id});
       });
     });
+  });
+});
+
+app.get('/api/users/auth', auth, (request, response) => {
+  response.status(200).json({
+    id: request.user._id,
+    name: request.user.name,
+    email: request.user.email,
+    role: request.user.role,
+    image: request.user.image,
+    isAuth: true,
+    isAdmin: request.user.role === 0 ? true : false,
   });
 });
 
