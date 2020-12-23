@@ -7,6 +7,8 @@ const bodyParser = require('body-parser');
 const config = require('./config/key');
 const {auth} = require('./middleware/auth');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
+let cors_origin = [`http://localhost:3000`];
 
 // application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({extended: true}));
@@ -15,6 +17,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use(cookieParser());
+
+// to solve cors problem
+app.use(
+  cors({
+    origin: cors_origin, // 허락하고자 하는 요청 주소
+    credentials: true, // true로 하면 설정한 내용을 response 헤더에 추가 해줍니다.
+  }),
+);
 
 mongoose
   .connect(config.mongoUri, {
@@ -27,6 +37,10 @@ mongoose
   .catch(err => console.log(err));
 
 app.get('/', (req, res) => res.send('Hello World!'));
+
+app.get('/api/hello', (req, res) => {
+  res.send('Hello~~~~~');
+});
 
 app.post('/api/users/register', (request, response) => {
   const user = new User(request.body);
