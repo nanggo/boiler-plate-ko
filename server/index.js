@@ -59,7 +59,7 @@ app.post('/api/users/login', (request, response) => {
         message: err.message,
       });
     if (!user) {
-      response.json({
+      return response.json({
         loginSuccess: false,
         message: '해당하는 이메일이 존재하지 않습니다.',
       });
