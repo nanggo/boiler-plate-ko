@@ -2,7 +2,9 @@ import axios from 'axios';
 import {LOGIN_USER, REGISTER_USER} from './types';
 export function userLogin(data) {
   const request = axios
-    .post('http://localhost:5000/api/users/login', data)
+    .post('http://localhost:5000/api/users/login', data, {
+      withCredentials: true,
+    })
     .then(response => response.data);
 
   return {
