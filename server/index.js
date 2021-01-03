@@ -36,12 +36,6 @@ mongoose
   .then(() => console.log('MongoDB connected...'))
   .catch(err => console.log(err));
 
-app.get('/', (req, res) => res.send('Hello World!'));
-
-app.get('/api/hello', (req, res) => {
-  res.send('Hello~~~~~');
-});
-
 app.post('/api/users/register', (request, response) => {
   const user = new User(request.body);
 
@@ -78,6 +72,7 @@ app.post('/api/users/login', (request, response) => {
       // 비번 매칭됐을 때
       user.generateToken((err, result) => {
         if (err) return response.status(400).send(err);
+        response.cookie('x_authExp', user.tokenExp);
         response
           .cookie('x_auth', result.token)
           .status(200)
@@ -100,10 +95,14 @@ app.get('/api/users/auth', auth, (request, response) => {
 });
 
 app.get('/api/users/logout', auth, (request, response) => {
-  User.findOneAndUpdate({_id: request.user._id}, {token: ''}, (err, res) => {
-    if (err) return response.json({success: false, error});
-    response.status(200).json({success: true});
-  });
+  User.findOneAndUpdate(
+    {_id: request.user._id},
+    {token: '', tokenExp: ''},
+    (err, res) => {
+      if (err) return response.json({success: false, error});
+      response.status(200).json({success: true});
+    },
+  );
 });
 
 app.listen(port, () =>

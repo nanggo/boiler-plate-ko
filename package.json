@@ -1,5 +1,9 @@
 {
-  "dependencies": {},
+  "dependencies": {
+    "formik": "^2.2.6",
+    "react-icons": "^4.1.0",
+    "yup": "^0.32.8"
+  },
   "scripts": {
     "server": "yarn --cwd server mon",
     "client": "yarn --cwd client start",
