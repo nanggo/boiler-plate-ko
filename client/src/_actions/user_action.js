@@ -1,8 +1,9 @@
 import axios from 'axios';
+import {url} from '../Config';
 import {AUTH_USER, LOGIN_USER, REGISTER_USER} from './types';
 export function userLogin(data) {
   const request = axios
-    .post('http://localhost:5000/api/users/login', data, {
+    .post(`${url}/api/users/login`, data, {
       withCredentials: true,
     })
     .then(response => response.data);
@@ -15,7 +16,7 @@ export function userLogin(data) {
 
 export function userRegister(data) {
   const request = axios
-    .post('http://localhost:5000/api/users/register', data)
+    .post(`${url}/api/users/register`, data)
     .then(response => response.data);
 
   return {
@@ -26,7 +27,7 @@ export function userRegister(data) {
 
 export function auth() {
   const request = axios
-    .get('http://localhost:5000/api/users/auth', {withCredentials: true})
+    .get(`${url}/api/users/auth`, {withCredentials: true})
     .then(response => response.data)
     .catch(err => alert(err));
 

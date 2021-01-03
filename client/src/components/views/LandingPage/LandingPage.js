@@ -1,18 +1,20 @@
 import React, {useEffect} from 'react';
 import axios from 'axios';
 import {withRouter} from 'react-router-dom';
+import {url} from '../../../Config';
 
 function LandingPage(props) {
   useEffect(() => {
+    console.log(process.env.NODE_ENV);
     axios
-      .get('http://localhost:5000/api/hello')
+      .get(`${url}/api/hello`)
       .then(res => console.log(res))
       .catch(err => console.error(err));
   }, []);
 
   const onLogoutClickHandler = () => {
     axios
-      .get('http://localhost:5000/api/users/logout', {withCredentials: true})
+      .get(`${url}/api/users/logout`, {withCredentials: true})
       .then(response => {
         if (response.data.success) {
           props.history.push('/login');
