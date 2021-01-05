@@ -25,8 +25,8 @@ app.use(
   }),
 );
 
-app.use('/api/user', require('./routes/user'));
-app.use('/api/product', require('./routes/product'));
+app.use('/api/users', require('./routes/users'));
+app.use('/api/product', require('./routes/products'));
 
 mongoose
   .connect(config.mongoUri, {
