@@ -26,6 +26,13 @@ function FileUpload() {
       })
       .catch(err => alert(err.message));
   };
+  const deleteImageHandler = image => {
+    const images = [...Images];
+    const index = Images.indexOf(image);
+    images.splice(index, 1);
+
+    setImages(images);
+  };
   return (
     <div style={{display: 'flex', justifyContent: 'space-between'}}>
       <Dropzone onDrop={fileDropHandler}>
@@ -64,6 +71,7 @@ function FileUpload() {
               style={{minWidth: '300px', width: '300px', height: '240px'}}
               src={`${url}/${image}`}
               alt={image.filename}
+              onClick={() => deleteImageHandler(image)}
             ></img>
           );
         })}
