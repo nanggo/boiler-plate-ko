@@ -27,6 +27,7 @@ app.use(
 
 app.use('/api/users', require('./routes/users'));
 app.use('/api/product', require('./routes/products'));
+app.use('/uploads', express.static('uploads'));
 
 mongoose
   .connect(config.mongoUri, {

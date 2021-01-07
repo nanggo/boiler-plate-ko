@@ -1,9 +1,12 @@
-import React from 'react';
+import React, {useState} from 'react';
 import Dropzone from 'react-dropzone';
 import {PlusOutlined} from '@ant-design/icons';
 import axios from 'axios';
+import {url} from '../../Config';
 
 function FileUpload() {
+  const [Images, setImages] = useState([]);
+
   const fileDropHandler = files => {
     const formData = new FormData();
     formData.append('file', files[0]);
@@ -13,9 +16,10 @@ function FileUpload() {
       },
     };
     axios
-      .post('/api/product/image', formData, config)
+      .post(`${url}/api/product/image`, formData, config)
       .then(res => {
         if (res.data.success) {
+          setImages([...Images, res.data.filepath]);
         } else {
           alert('파일 업로드 실패');
         }
@@ -44,6 +48,26 @@ function FileUpload() {
           </section>
         )}
       </Dropzone>
+      <div
+        style={{
+          display: 'flex',
+          width: '350px',
+          height: '240px',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+        }}
+      >
+        {Images.map((image, index) => {
+          return (
+            <img
+              key={index}
+              style={{minWidth: '300px', width: '300px', height: '240px'}}
+              src={`${url}/${image}`}
+              alt={image.filename}
+            ></img>
+          );
+        })}
+      </div>
     </div>
   );
 }
