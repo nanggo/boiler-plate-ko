@@ -4,7 +4,7 @@ import {PlusOutlined} from '@ant-design/icons';
 import axios from 'axios';
 import {url} from '../../Config';
 
-function FileUpload() {
+function FileUpload(props) {
   const [Images, setImages] = useState([]);
 
   const fileDropHandler = files => {
@@ -20,6 +20,7 @@ function FileUpload() {
       .then(res => {
         if (res.data.success) {
           setImages([...Images, res.data.filepath]);
+          props.syncImagesFunc([...Images, res.data.filepath]);
         } else {
           alert('파일 업로드 실패');
         }
@@ -32,6 +33,7 @@ function FileUpload() {
     images.splice(index, 1);
 
     setImages(images);
+    props.syncImagesFunc(images);
   };
   return (
     <div style={{display: 'flex', justifyContent: 'space-between'}}>

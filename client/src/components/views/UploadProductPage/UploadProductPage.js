@@ -18,7 +18,7 @@ function UploadProductPage() {
   const [Name, setName] = useState('');
   const [Description, setDescription] = useState('');
   const [Price, setPrice] = useState(0);
-  const [Continent, setContinent] = useState(1);
+  const [Continent, setContinent] = useState(Continents[0]);
   const [Images, setImages] = useState([]);
 
   const nameChangeHandler = event => setName(event.currentTarget.value);
@@ -27,6 +27,9 @@ function UploadProductPage() {
     setDescription(event.currentTarget.value);
 
   const priceChangeHandler = event => setPrice(event.currentTarget.value);
+  const continentChangeHandler = event =>
+    setContinent(event.currentTarget.value);
+  const syncImage = images => setImages(images);
 
   return (
     <div style={{maxWidth: '700px', margin: '2rem auto'}}>
@@ -35,7 +38,7 @@ function UploadProductPage() {
       </div>
       <Form>
         {/* dropzone */}
-        <FileUpload />
+        <FileUpload syncImagesFunc={syncImage} />
         <br />
         <br />
         <label>이름</label>
@@ -57,7 +60,7 @@ function UploadProductPage() {
         ></Input>
         <br />
         <br />
-        <select>
+        <select onChange={continentChangeHandler}>
           {Continents.map((continent, index) => (
             <option key={index} value={continent}>
               {continent}
